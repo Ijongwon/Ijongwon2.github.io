@@ -20,6 +20,25 @@
   --muted: #5a6a8a;
   --dim: #8494b8;
   --border: rgba(255,255,255,0.06);
+  --nav-bg: rgba(5,7,15,0.9);
+  --scrollbar-track: #05070f;
+}
+
+html.light {
+  --bg: #f5f7fa;
+  --bg2: #eef0f5;
+  --surface: #ffffff;
+  --surface2: #f0f2f7;
+  --accent: #00b37a;
+  --accent2: #e0335e;
+  --accent3: #d4900a;
+  --blue: #2563eb;
+  --text: #1a2035;
+  --muted: #8896b0;
+  --dim: #5a6a8a;
+  --border: rgba(0,0,0,0.08);
+  --nav-bg: rgba(245,247,250,0.92);
+  --scrollbar-track: #f5f7fa;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,9 +79,49 @@ a:hover ~ #cursor, button:hover ~ #cursor { width: 20px; height: 20px; }
 
 /* SCROLLBAR */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 
+/* THEME TOGGLE */
+.theme-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.theme-icon { font-size: 0.9rem; transition: transform 0.5s; }
+.theme-toggle:hover .theme-icon { transform: rotate(20deg); }
+
+/* LIGHT MODE OVERRIDES */
+html.light .hero-grid {
+  background-image:
+    linear-gradient(rgba(0,179,122,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,179,122,0.06) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+html.light .hero-glow {
+  background: radial-gradient(circle, rgba(0,179,122,0.08) 0%, transparent 70%);
+}
+html.light body { cursor: auto; }
+html.light #cursor, html.light #cursor-ring { display: none; }
+html.light .timeline::before {
+  background: linear-gradient(to bottom, var(--accent), transparent);
+}
+
+/* CHATBOT */
 /* NAV */
 nav {
   position: fixed;
@@ -77,7 +136,7 @@ nav::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(5,7,15,0.9) 0%, transparent 100%);
+  background: linear-gradient(to bottom, var(--nav-bg) 0%, transparent 100%);
   z-index: -1;
   backdrop-filter: blur(12px);
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
@@ -702,6 +761,10 @@ footer {
     <li><a href="#career">Career</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+    <span class="theme-icon" id="themeIcon">🌙</span>
+    <span id="themeLabel">Dark</span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -715,8 +778,8 @@ footer {
     <p class="hero-sub">Fullstack Developer</p>
     <p class="hero-desc">
       더 나은 코드를 끊임없이 고민합니다.<br>
-      React · Spring · AWS를 기반으로<br>
-      아이디어를 실제 제품으로 만듭니다.
+      새로운 기술에 대한 두려움이 없습니다.<br>
+      
     </p>
     <div class="hero-cta">
       <a href="#career" class="btn-primary">경력 보기 →</a>
@@ -876,13 +939,13 @@ footer {
         <span class="timeline-badge badge-current">재직중</span>
       </div>
       <div class="timeline-company">오젠아이(주)</div>
-      <div class="timeline-role">Fullstack Developer</div>
+      <div class="timeline-role"Fullstack Developer</div>
       <ul class="timeline-desc">
         <li>세무회계관리 ERP 제작 및 유지보수</li>
         <li>페이지 제작 및 프론트엔드 기능 개발</li>
         <li>쿼리 최적화 및 RESTful API 개발</li>
         <li>문자 결제내역 자동 수집 어플 개발</li>
-        <li>계정과목 자동 추천 엔진 마이그레이션</li>
+        <li>계정과목 자동 추천 엔진 개발</li>
       </ul>
       <div class="timeline-stack">
         <span class="stack-tag">React.js</span>
@@ -891,7 +954,6 @@ footer {
         <span class="stack-tag">JPA</span>
         <span class="stack-tag">GitHub</span>
         <span class="stack-tag">Flutter</span>
-        <span class="stack-tag">Render</span>
       </div>
     </div>
 
@@ -966,10 +1028,6 @@ footer {
       <div class="edu-period">2016.03 — 2022.11</div>
       <div class="edu-school">강남대학교</div>
       <div class="edu-course">교육학과 (중퇴) — 개발자로의 전향 결정</div>
-      <div class="edu-tags">
-        <span class="edu-tag" style="color:var(--dim);border-color:var(--border)">컴퓨터 프로그래밍</span>
-        <span class="edu-tag" style="color:var(--dim);border-color:var(--border)">자기주도 학습</span>
-      </div>
     </div>
   </div>
 </section>
@@ -994,7 +1052,22 @@ footer {
 </footer>
 
 <script>
-// Custom cursor
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.classList.toggle('light');
+  document.getElementById('themeIcon').textContent = isLight ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = isLight ? 'Light' : 'Dark';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+// Load saved theme
+if (localStorage.getItem('theme') === 'light') {
+  document.documentElement.classList.add('light');
+  document.getElementById('themeIcon').textContent = '☀️';
+  document.getElementById('themeLabel').textContent = 'Light';
+}
+
+
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
